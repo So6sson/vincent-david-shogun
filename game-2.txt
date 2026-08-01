@@ -1,0 +1,48 @@
+.add(belt);
+  const neck=new THREE.Mesh(new THREE.CylinderGeometry(.35,.42,.45,12),skinMat);neck.position.y=2.25;player.add(neck);
+  head=new THREE.Mesh(new THREE.SphereGeometry(1.18,32,24),skinMat);head.scale.y=1.08;head.position.y=3.3;head.castShadow=true;player.add(head);
+  const faceMat=new THREE.MeshBasicMaterial({color:0x18050d});
+  for(const x of[-.39,.39]){const eye=new THREE.Mesh(new THREE.SphereGeometry(.105,12,8),faceMat);eye.position.set(x,3.43,1.06);eye.scale.y=.65;player.add(eye)}
+  const browGeo=new THREE.BoxGeometry(.42,.07,.08);for(const x of[-.38,.38]){const b=new THREE.Mesh(browGeo,faceMat);b.position.set(x,3.67,1.03);b.rotation.z=x<0?.18:-.18;player.add(b)}
+  const nose=new THREE.Mesh(new THREE.ConeGeometry(.12,.42,12),skinMat);nose.rotation.x=Math.PI/2;nose.position.set(0,3.18,1.19);player.add(nose);
+  for(const x of[-.16,.16]){const m=new THREE.Mesh(new THREE.ConeGeometry(.12,.5,8),faceMat);m.rotation.z=x<0?1.25:-1.25;m.rotation.x=.2;m.position.set(x,2.95,1.05);player.add(m)}
+  const crest=new THREE.Mesh(new THREE.TorusGeometry(.62,.055,8,32,Math.PI),goldMat);crest.rotation.z=Math.PI;crest.position.set(0,4.38,.18);player.add(crest);
+  const armGeo=new THREE.CylinderGeometry(.17,.23,1.7,9);for(const x of[-.88,.88]){const a=new THREE.Mesh(armGeo,darkMat);a.position.set(x,1.45,0);a.rotation.z=x<0?-.45:.45;a.castShadow=true;player.add(a)}
+  const blade=new THREE.Mesh(new THREE.BoxGeometry(.08,.08,2.3),new THREE.MeshStandardMaterial({color:0xe9fbff,emissive:0x5cf4ff,emissiveIntensity:1.2,metalness:1,roughness:.08}));blade.position.set(1.15,1.25,-.5);blade.rotation.x=-.35;blade.rotation.z=.4;player.add(blade);
+  aura=new THREE.Mesh(new THREE.TorusGeometry(1.55,.06,8,64),new THREE.MeshBasicMaterial({color:0x5cf4ff,transparent:true,opacity:.6,blending:THREE.AdditiveBlending}));aura.rotation.x=Math.PI/2;aura.position.y=.08;player.add(aura);
+  headLight=new THREE.PointLight(0xffdf9a,8,7,2);headLight.position.set(0,4.1,.3);player.add(headLight);
+  player.position.set(0,0,4);scene.add(player);
+}
+
+function bindEvents(){
+  addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
+  addEventListener('keydown',e=>{input.keys[e.code]=true;if(e.code==='KeyE')triggerSuper();if((e.code==='ShiftLeft'||e.code==='ShiftRight')&&!e.repeat)dash();if(e.code==='Escape')paused=!paused});
+  addEventListener('keyup',e=>input.keys[e.code]=false);
+  renderer.domElement.addEventListener('pointermove',e=>{input.pointer.x=e.clientX/innerWidth*2-1;input.pointer.y=-(e.clientY/innerHeight)*2+1;raycaster.setFromCamera(input.pointer,camera);raycaster.ray.intersectPlane(groundPlane,input.aim)});
+  renderer.domElement.addEventListener('pointerdown',e=>{if(e.button===0)input.mouseDown=true});addEventListener('pointerup',()=>input.mouseDown=false);
+  $('#startBtn').onclick=startGame;$('#restartBtn').onclick=startGame;
+  setupJoystick();
+  $('#fireBtn').addEventListener('pointerdown',e=>{e.preventDefault();input.touchFiring=true});addEventListener('pointerup',()=>input.touchFiring=false);
+  $('#superBtn').addEventListener('pointerdown',e=>{e.preventDefault();triggerSuper()});$('#dashBtn').addEventListener('pointerdown',e=>{e.preventDefault();dash()});
+}
+function setupJoystick(){const joy=$('#joy'),nub=$('#nub');let active=false,id=null;const update=e=>{const r=joy.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,len=Math.hypot(dx,dy)||1,max=r.width*.35,scale=Math.min(max,len)/len;dx*=scale;dy*=scale;nub.style.transform=`translate(${dx}px,${dy}px)`;input.touchMove.set(dx/max,-dy/max)};joy.addEventListener('pointerdown',e=>{active=true;id=e.pointerId;joy.setPointerCapture(id);update(e)});joy.addEventListener('pointermove',e=>{if(active&&e.pointerId===id)update(e)});const end=()=>{active=false;input.touchMove.set(0,0);nub.style.transform='translate(0,0)'};joy.addEventListener('pointerup',end);joy.addEventListener('pointercancel',end)}
+
+function resetState(){
+  for(const list of[enemies,shots,particles,pickups,enemyBullets])for(const o of list)scene.remove(o.mesh||o);enemies=[];shots=[];particles=[];pickups=[];enemyBullets=[];
+  Object.assign(state,{score:0,hp:100,shine:0,wave:1,kills:0,combo:1,comboTimer:0,elapsed:0,dashCd:0,invuln:0,bossSpawned:false,bossDefeated:false});player.position.set(0,0,4);player.visible=true;spawnTimer=0;lastShot=0;cameraShake=0;updateHUD();
+}
+function startGame(){resetState();$('#start').style.display='none';$('#gameover').style.display='none';hud.style.display='block';running=true;paused=false;clock.getDelta();ensureAudio();announce('LE CRÂNE S’ÉVEILLE',1600);for(let i=0;i<5;i++)spawnEnemy('wig')}
+function gameOver(){running=false;player.visible=false;hud.style.display='none';$('#gameover').style.display='grid';$('#finalScore').textContent=`${Math.floor(state.score).toLocaleString('fr-FR')} points`;$('#epitaph').textContent=state.score>state.high?'Nouveau record. Le ministère japonais de la brillance vient de classer Vincent “miroir stratégique”.':'La repousse n’a pas gagné. Elle a seulement obtenu un délai administratif.';state.high=Math.max(state.high,state.score);saveHigh(state.high);tone(70,.55,'sawtooth',.09)}
+
+function spawnEnemy(type=null){
+  if(!type){const r=Math.random();type=state.wave>=4&&r>.83?'clipper':state.wave>=2&&r>.62?'salary':'wig'}
+  const a=rand(0,Math.PI*2),r=rand(18.5,20);let mesh,hp=20,speed=rand(1.35,2.1),damage=9,radius=.8,score=130;
+  if(type==='wig'){mesh=makeWig();hp=18+state.wave*2}
+  if(type==='clipper'){mesh=makeClipper();hp=32+state.wave*4;speed=rand(2.1,2.8);damage=15;score=240;radius=.9}
+  if(type==='salary'){mesh=makeSalary();hp=46+state.wave*5;speed=rand(1.0,1.5);damage=12;score=320;radius=1}
+  mesh.position.set(Math.cos(a)*r,0,Math.sin(a)*r);scene.add(mesh);enemies.push({mesh,type,hp,maxHp:hp,speed,damage,radius,score,hitCd:0,phase:rand(0,10),charge:rand(1,3),boss:false})
+}
+function makeWig(){const g=new THREE.Group();const cap=new THREE.Mesh(new THREE.SphereGeometry(.78,16,9,0,Math.PI*2,0,Math.PI*.58),new THREE.MeshStandardMaterial({color:0x2a0716,roughness:.9,metalness:.05}));cap.position.y=1.1;cap.castShadow=true;g.add(cap);for(let i=0;i<11;i++){const a=i/11*Math.PI*2;const strand=new THREE.Mesh(new THREE.ConeGeometry(.16,1.05,6),new THREE.MeshStandardMaterial({color:i%2?0x4b0b20:0x16020c,roughness:.95}));strand.position.set(Math.cos(a)*.65,.62,Math.sin(a)*.65);strand.rotation.z=Math.cos(a)*.26;strand.rotation.x=Math.sin(a)*.26;g.add(strand)}for(const x of[-.25,.25]){const e=new THREE.Mesh(new THREE.SphereGeometry(.085,8,6),whiteGlow);e.position.set(x,1.05,.69);g.add(e)}return g}
+function makeClipper(){const g=new THREE.Group();const body=new THREE.Mesh(new THREE.BoxGeometry(1,1.25,.65),new THREE.MeshStandardMaterial({color:0x555b7a,metalness:.95,roughness:.15,emissive:0x120629}));body.position.y=.9;body.castShadow=true;g.add(body);for(let i=-2;i<=2;i++){const tooth=new THREE.Mesh(new THREE.BoxGeometry(.13,.65,.35),new THREE.MeshStandardMaterial({color:0xe9fbff,metalness:1,roughness:.08}));tooth.position.set(i*.2,1.75,.12);g.add(tooth)}const eye=new THREE.Mesh(new THREE.BoxGeometry(.55,.12,.05),pinkMat);eye.position.set(0,1.05,.36);g.add(eye);return g}
+function makeSalary(){const g=new THREE.Group();const suit=new THREE.Mesh(new THREE.BoxGeometry(1.05,1.55,.65),new THREE.MeshStandardMaterial({color:0x101729,roughness:.5,metalness:.4}));suit.position.y=.85;suit.castShadow=true;g.add(suit);const h=new THREE.Mesh(new THREE.SphereGeometry(.48,14,10),skinMat);h.position.y=1.95;g.add(h);const toupee=new THREE.Mesh(new THREE.BoxGeometry(.82,.16,.58),new THREE.MeshStandardMaterial({color:0x20040b,roughness:1}));toupee.position.set(0,2.38,.03);toupee.rotation.z=.12;g.add(toupee);const tie=new THREE.Mesh(new THREE.ConeGeometry(.13,.7,4),pinkMat);tie.position.set(0,1.1,.39);tie.rotation.z=Math.PI;g.add(tie);return g}
+function spawnBoss(){state.bossSpawned=true;const g=new THREE.Group()
