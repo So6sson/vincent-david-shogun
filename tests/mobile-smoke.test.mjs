@@ -1,0 +1,11 @@
+import fs from 'node:fs';
+const check=(value,message)=>{if(!value)throw new Error(message)};
+for(const file of ['index.html','style.css','game.js','game-core.js'])check(fs.existsSync(new URL('../'+file,import.meta.url)),file+' missing');
+const html=fs.readFileSync(new URL('../index.html',import.meta.url),'utf8');
+for(const id of ['startBtn','joy','fireBtn','dashBtn','superBtn','hairFill'])check(html.includes(`id="${id}"`),id+' missing');
+const css=fs.readFileSync(new URL('../style.css',import.meta.url),'utf8');
+check(!css.includes('#rotate'),'landscape blocker remains');
+const game=fs.readFileSync(new URL('../game.js',import.meta.url),'utf8');
+check(game.includes('syncHair()'),'hair model sync missing');
+check(game.includes('BANKAI CAPILLAIRE'),'bankai missing');
+console.log('portrait mobile smoke tests: ok');
