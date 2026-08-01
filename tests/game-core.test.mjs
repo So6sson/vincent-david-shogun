@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {hairStage,tuftCountForHair,applyDamage,applyKill,consumeBankai} from '../game-core.js';
+assert.equal(hairStage(0),'CALVITIE IMPÉRIALE');
+assert.equal(hairStage(100),'CHEVELURE ABSOLUE');
+assert.equal(tuftCountForHair(100),32);
+assert.equal(applyDamage({hp:100,hair:50},20).hair,35);
+const killed=applyKill({score:0,hp:100,hair:0,combo:1},'wig',1);
+assert.equal(killed.hair,8);
+assert.equal(killed.combo,2);
+assert.ok(killed.score>0);
+assert.equal(consumeBankai(99).activated,false);
+assert.equal(consumeBankai(100).hair,35);
+console.log('game-core tests: ok');
