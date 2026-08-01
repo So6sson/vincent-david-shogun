@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#10051f">
+<title>Vincent David — Shōgun du Crâne Solaire</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app"></div><div id="vignette"></div><div id="grain"></div><div id="flash"></div>
+<div id="hud">
+  <div class="topline"><div class="brand">Vincent David<small>Shōgun du Crâne Solaire</small></div><div class="stats">SCORE <span id="score">0</span><br>VAGUE <span id="wave">1</span> · COMBO <span id="combo">×1</span></div></div>
+  <div class="bars">
+    <div class="barrow"><b>CRÂNE</b><div class="bar"><div id="hpFill" class="fill hp"></div></div><b id="hpText">100</b></div>
+    <div class="barrow"><b>LUSTRE</b><div class="bar"><div id="shineFill" class="fill shine"></div></div><b id="shineText">0</b></div>
+  </div>
+</div>
+<div id="announcement"></div>
+<section id="start" class="screen">
+  <div class="panel"><div class="seal">禿</div>
+    <h1>Vincent David<em>Shōgun du Crâne Solaire</em></h1>
+    <p class="lede">En l’an 20XX, les <strong>perruques yōkai</strong> ont déclaré la guerre aux fronts dégagés. Une seule surface possède assez de pureté optique pour sauver Neo-Toulouse : le crâne légendaire de Vincent David.</p>
+    <button id="startBtn">Libérer le crâne</button>
+    <div class="controls-note"><span class="key">ZQSD / WASD / Flèches : bouger</span><span class="key">Souris / Espace : rayon</span><span class="key">Maj : dash</span><span class="key">E : miroir du néant</span></div>
+  </div>
+</section>
+<section id="gameover" class="screen"><div class="panel"><div class="seal">終</div><h2>Crâne terni</h2><div id="finalScore">0 points</div><p class="lede" id="epitaph"></p><button id="restartBtn">Repoli et retour</button></div></section>
+<div id="mobile"><div id="joy" class="joy"><div id="nub" class="nub"></div></div><button id="fireBtn" class="touch-btn fire-btn">RAYON</button><button id="superBtn" class="touch-btn super-btn">禿<br>SUPER</button><button id="dashBtn" class="touch-btn dash-btn">DASH</button></div>
+<div id="rotate">Tourne l’écran.<br>Le crâne exige le mode paysage.</div>
+<script type="module" src="game.js"></script>
+</body>
+</html>
