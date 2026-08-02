@@ -17,8 +17,15 @@ jobs:
         with:
           node-version: 22
       - name: Check JavaScript syntax
-        run: node --check game.js
+        run: |
+          node --check game.js
+          node --check game-v5.js
+          node --check character-v5.js
+          node --check enemies-v5.js
+          node --check assets-core-v5.js
       - name: Test hair gameplay core
         run: node tests/game-core.test.mjs
       - name: Test portrait mobile contracts
         run: node tests/mobile-smoke.test.mjs
+      - name: Test v5 asset rendering core
+        run: node tests/assets-v5.test.mjs
