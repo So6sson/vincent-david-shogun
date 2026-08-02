@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import { FACE_PROFILE, hairRenderState, scalpSample, qualityForDevice } from '../assets-core-v5.js';
+assert.ok(FACE_PROFILE.regrowthDensity>=200);
+assert.equal(hairRenderState(0).strands,0);
+assert.ok(hairRenderState(50).strands>90);
+assert.equal(hairRenderState(100).strands,FACE_PROFILE.regrowthDensity);
+assert.ok(hairRenderState(100).heroLocks>=40);
+const sample=scalpSample(12,220);
+assert.ok(Number.isFinite(sample.theta)&&Number.isFinite(sample.phi));
+assert.ok(qualityForDevice({width:1440,height:3200,pixelRatio:3}).hairFactor<1);
+console.log('assets-v5 tests passed');
