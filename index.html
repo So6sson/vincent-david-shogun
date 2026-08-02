@@ -6,15 +6,15 @@
 <meta name="theme-color" content="#09010f">
 <meta name="mobile-web-app-capable" content="yes">
 <title>Vincent David — La Greffe du Shōgun</title>
-<link rel="stylesheet" href="style.css?v=4">
+<link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
 <main id="app" aria-label="Zone de jeu"></main><div id="vignette"></div><div id="grain"></div><div id="flash"></div>
 <header id="hud"><div class="hud-top"><div class="brand">VINCENT DAVID<small>LA GREFFE DU SHŌGUN</small></div><div class="scorebox"><span id="score">0</span><small>VAGUE <b id="wave">1</b> · ×<b id="combo">1</b></small></div></div><div class="meters"><div class="meter-row"><span>CRÂNE</span><div class="meter"><div id="hpFill" class="meter-fill hp-fill"></div></div><b id="hpText">100</b></div><div class="meter-row"><span>GREFFE</span><div class="meter"><div id="hairFill" class="meter-fill hair-fill"></div></div><b id="hairText">0</b></div></div><div id="hairStage" class="hair-stage">CALVITIE IMPÉRIALE</div></header>
 <div id="announcement"></div>
-<section id="start" class="screen active"><div class="panel"><div class="seal">毛</div><p class="eyebrow">NEO-TOKYO CAPILLAIRE · AN 20XX</p><h1>VINCENT<br>DAVID <em>LA GREFFE DU SHŌGUN</em></h1><p class="lede">Les perruques yōkai ont volé les derniers cheveux sacrés. Abats-les : leurs mèches s’implantent directement sur le crâne de Vincent. Mais chaque coup reçu déclenche une nouvelle crise d’alopécie.</p><div class="rules"><span>Tue → les cheveux se greffent</span><span>Prends un coup → ils s’arrachent</span><span>100 % → BANKAI CAPILLAIRE</span></div><button id="startBtn" class="main-btn">DÉMARRER LA REPOUSSE</button><p class="mobile-hint">Jeu conçu pour smartphone vertical</p><div id="loadingError" class="loading-error" hidden>Le moteur 3D n’a pas chargé. Recharge la page.</div></div></section>
+<section id="start" class="screen active"><div class="panel"><div class="seal">毛</div><p class="eyebrow">NEO-TOKYO CAPILLAIRE · AN 20XX</p><h1>VINCENT<br>DAVID <em>LA GREFFE DU SHŌGUN</em></h1><p class="lede">Les perruques yōkai ont volé les derniers cheveux sacrés. Abats-les : leurs mèches volent jusqu’au crâne de Vincent et s’implantent réellement. Chaque coup reçu arrache une partie de la greffe.</p><div class="rules"><span>Tue → les mèches se greffent</span><span>Prends un coup → elles s’arrachent</span><span>100 % → BANKAI CAPILLAIRE</span></div><button id="startBtn" class="main-btn">DÉMARRER LA REPOUSSE</button><p class="mobile-hint">Optimisé pour smartphone vertical · Modèle facial v5</p><div id="loadingError" class="loading-error" hidden>Le moteur 3D n’a pas chargé. Recharge la page.</div></div></section>
 <section id="gameover" class="screen"><div class="panel compact-panel"><div class="seal">抜</div><p class="eyebrow">RAPPORT DU MINISTÈRE DU CUIR CHEVELU</p><h2 id="endTitle">ALOPÉCIE TOTALE</h2><div id="finalScore" class="final-score">0 points</div><p id="epitaph" class="lede"></p><button id="restartBtn" class="main-btn">RELANCER LA GREFFE</button></div></section>
 <div id="mobileControls"><div id="joy" class="joy"><div id="nub" class="nub"></div></div><div class="actions"><button id="superBtn" class="touch-btn super-btn"><span>毛</span><small>BANKAI</small></button><button id="dashBtn" class="touch-btn dash-btn">DASH</button><button id="fireBtn" class="touch-btn fire-btn"><span>☀</span><small>CRÂNE LASER</small></button></div></div>
-<script type="module" src="game.js?v=4"></script>
+<script type="module" src="game-v5.js?v=5"></script>
 </body>
 </html>
